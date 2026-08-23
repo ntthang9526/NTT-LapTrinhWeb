@@ -11,6 +11,7 @@ a {
   color: #0077cc;
 }
 
+
 .btn-primary {
   color: #fff;
   background-color: #1b6ec2;
@@ -21,6 +22,9 @@ a {
   color: #fff;
   background-color: #1b6ec2;
   border-color: #1861ac;
+}
+.nav-item{
+    padding-inline:12px;
 }
 
 .border-top {

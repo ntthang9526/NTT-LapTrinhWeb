@@ -3,6 +3,50 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <a href="https://google.com/">
+        <img class="index-img " src="~/lib/Images/image.jpg" style="width:80%"/>
+        </a>
+</div>
+
+
+<div style="margin-inline:10%">
+    <h3>Danh sách sản phẩm</h3>
+    <div class="row">
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="border rounded p-3 text-center h-100">
+                <a asp-controller="Product" asp-action="Detail" asp-route-id="1">
+                    <img src="~/lib/Images/img1.jpg" class="img-fluid mb-3" style="height: 160px; object-fit: contain;" alt="Product Name 1" />
+                </a>
+                <h6 class="text-secondary mb-0">Product Name 1</h6>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="border rounded p-3 text-center h-100">
+                <a asp-controller="Product" asp-action="Detail" asp-route-id="2">
+                    <img src="~/lib/Images/img2.jpg" class="img-fluid mb-3" style="height: 160px; object-fit: contain;" alt="Product Name 2" />
+                </a>
+                <h6 class="text-secondary mb-0">Product Name 2</h6>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="border rounded p-3 text-center h-100">
+                <a asp-controller="Product" asp-action="Detail" asp-route-id="1">
+                    <img src="~/lib/Images/img3.jpg" class="img-fluid mb-3" style="height: 160px; object-fit: contain;" alt="Product Name 3" />
+                </a>
+                <h6 class="text-secondary mb-0">Product Name 3</h6>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="border rounded p-3 text-center h-100">
+                <a asp-controller="Product" asp-action="Detail" asp-route-id="2">
+                    <img src="~/lib/Images/img4.jpg" class="img-fluid mb-3" style="height: 160px; object-fit: contain;" alt="Product Name 4" />
+                </a>
+                <h6 class="text-secondary mb-0">Product Name 4</h6>
+            </div>
+        </div>
+
+
+    </div>
 </div>
