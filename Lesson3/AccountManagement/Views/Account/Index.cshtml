@@ -1,0 +1,24 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Index";
+    var accounts = ViewBag.accounts;
+}
+<div class="row">
+    @foreach (var a in ViewBag.accounts)
+    {
+        <div class="col-md-4">
+            <div class="img-thumbnail">
+                <img src="@a.Avatar" alt="" class="img-fluid" />
+            </div>
+            <div class="figure-caption">
+                <h3 class="text-black">@a.Name</h3>
+                <p>@a.Bio</p>
+                <p>
+                    <a asp-route="myprofile" asp-route-id ="@a.ID" class="btn btn-success d-block">Profile</a>
+                </p>
+            </div>
+        </div>
+    }
+</div>
