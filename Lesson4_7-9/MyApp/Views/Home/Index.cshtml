@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+<h2>Cú pháp Razor</h2>
+@{
+    var total = 10000000000;
+}
+@{
+    var msg = "Xin chào";
+}
+<p>Tài khoản của bạn có @total đồng</p>
+<p>Hello is "@msg"</p>
+@{
+    var greeting = "Chúc bạn 1 ngày tốt lành";
+    var today = DateOnly.FromDateTime(DateTime.Today);
+    var message = "Hôm nay là ngày " + today.ToString("dd/MM/yyyy") + ". " + greeting; 
+}
+<p>@message</p>

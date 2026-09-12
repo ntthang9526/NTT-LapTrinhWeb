@@ -1,0 +1,50 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IEnumerable<DemoWeb.Models.Book>
+@{
+    ViewData["Title"] = "Index";
+}
+<h2>Danh sách các cuốn sách</h2>
+<form action="" method="post" class="form-check-inline d-flex align-items-center gap-2 flex-wrap)" role="form">
+    <div class="form-group d-flex align-items-center gap-2 flex-wrap)" style="">
+        <select name="AuthorID" class="form-control" asp-items="@ViewBag.authors">
+            <option value="">Chọn tất cả</option>
+        </select>
+        <select name="GenreID" class="form-control" asp-items="@ViewBag.genres">
+            <option value="">Chọn thể loại</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+    <a asp-action="Create" class="btn btn-danger">Thêm mới</a>
+</form>
+<hr />
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tiêu đề</th>
+            <th>Tác giả</th>
+            <th>Thể loại</th>
+            <th>Giá</th>
+            <th>Hình ảnh</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model)
+        {
+            <tr>
+                <td>@book.ID</td>
+                <td>@book.Title</td>
+                <td>@book.AuthorID</td>
+                <td>@book.GenreID</td>
+                <td>@book.Price</td>
+                <td><img src="@book.Image" width="80"/></td>
+                <td>
+                    <a asp-action="Edit" class="btn btn-primary">Sửa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>    
