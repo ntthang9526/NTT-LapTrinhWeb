@@ -21,16 +21,7 @@
             @foreach (var product in products)
             {
                 <div class="col-md-3">
-                    <div class="img-thumbnail">
-                        <div class="ratio ratio-1x1">
-                            <img src="@product.Image" alt="" class="img-fluid object-fit-cover" style="" />
-                        </div>
-                        <div class="figure-caption text-black">
-                            <h4 class="line-clamp-2" style="height:60px">@product.Name</h4>
-                            <p>Giá: <span class="text-decoration-line-through">@product.Price</span> @product.SalePrice</p>
-                            <a asp-route="product-detail" asp-route-id="@product.ID" class="btn btn-success d-block">Chi tiết sản phẩm</a>
-                        </div>
-                    </div>
+                    <partial name="_ProductCard" model="product"></partial>
                 </div>
             }
         </div>

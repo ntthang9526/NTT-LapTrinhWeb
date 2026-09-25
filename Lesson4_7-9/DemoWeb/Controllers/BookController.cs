@@ -15,7 +15,10 @@ namespace DemoWeb.Controllers
         }
         public IActionResult Create()
         {
-            return View();
+            ViewBag.authors = book.Authors;
+            ViewBag.genres = book.Genres;
+            Book model = new Book();
+            return View(model);
         }
     }
 }

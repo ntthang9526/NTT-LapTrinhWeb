@@ -1,0 +1,198 @@
+@model List<MyWebsite.Models.CartItem>
+@{
+    ViewData["Title"] = "Giỏ Hàng Thuốc Của Bạn";
+    decimal totalPrice = ViewBag.TotalPrice ?? 0;
+    int totalQuantity = ViewBag.TotalQuantity ?? 0;
+    decimal freeShippingThreshold = 300000;
+    decimal shippingFee = totalPrice >= freeShippingThreshold || totalPrice == 0 ? 0 : 30000;
+    decimal grandTotal = totalPrice + shippingFee;
+}
+
+<div class="container mt-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-decoration-none text-muted"><i class="bi bi-house-door"></i> Trang Chủ</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Product" asp-action="Index" class="text-decoration-none text-muted">Sản Phẩm</a></li>
+            <li class="breadcrumb-item active text-teal fw-semibold" aria-current="page">Giỏ Hàng (@totalQuantity sản phẩm)</li>
+        </ol>
+    </nav>
+
+    <h2 class="fw-bold mb-4 text-dark"><i class="bi bi-cart3 text-teal me-2"></i>Giỏ Hàng Y Tế Của Bạn</h2>
+
+    @if (Model.Any())
+    {
+        <!-- Free shipping bar notice -->
+        <div class="alert alert-light border shadow-sm rounded-3 mb-4 d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-truck text-teal fs-4"></i>
+                <div>
+                    @if (totalPrice >= freeShippingThreshold)
+                    {
+                        <span class="text-success fw-bold">Chúc mừng! Bạn đã được MIỄN PHÍ VẬN CHUYỂN cho đơn hàng này.</span>
+                    }
+                    else
+                    {
+                        <span>Mua thêm <strong>@((freeShippingThreshold - totalPrice).ToString("N0")) đ</strong> để được <strong>Miễn Phí Vận Chuyển</strong> toàn quốc!</span>
+                    }
+                </div>
+            </div>
+            <a asp-controller="Product" asp-action="Index" class="btn btn-sm btn-outline-teal fw-semibold">
+                + Chọn Thêm Thuốc
+            </a>
+        </div>
+
+        <div class="row g-4">
+            <!-- Left: Cart Items List -->
+            <div class="col-lg-8">
+                <div class="cart-table-card">
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col" style="min-width: 250px;">Sản Phẩm</th>
+                                    <th scope="col" class="text-center">Đơn Giá</th>
+                                    <th scope="col" class="text-center" style="min-width: 140px;">Số Lượng</th>
+                                    <th scope="col" class="text-end">Thành Tiền</th>
+                                    <th scope="col" class="text-center">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <!-- Product info -->
+                                        <td>
+                                            <div class="d-flex align-items-center gap-3">
+                                                <img src="@item.ImageUrl" alt="@item.ProductName" class="cart-img-thumb" />
+                                                <div>
+                                                    <h6 class="fw-bold mb-1">
+                                                        <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId" class="text-dark text-decoration-none">
+                                                            @item.ProductName
+                                                        </a>
+                                                    </h6>
+                                                    <span class="small text-muted"><i class="bi bi-box-seam me-1"></i>Đơn vị: @item.Unit</span>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <!-- Unit Price -->
+                                        <td class="text-center fw-semibold text-dark">
+                                            @item.Price.ToString("N0") đ
+                                        </td>
+
+                                        <!-- Quantity Form -->
+                                        <td class="text-center">
+                                            <form method="post" asp-controller="Cart" asp-action="UpdateQuantity" class="d-inline-flex align-items-center justify-content-center">
+                                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                                <div class="quantity-picker" style="height: 36px;">
+                                                    <button type="submit" name="quantity" value="@(item.Quantity - 1)" title="Giảm số lượng">-</button>
+                                                    <input type="text" value="@item.Quantity" readonly style="width: 40px; font-size: 0.9rem;" />
+                                                    <button type="submit" name="quantity" value="@(item.Quantity + 1)" title="Tăng số lượng">+</button>
+                                                </div>
+                                            </form>
+                                        </td>
+
+                                        <!-- Subtotal -->
+                                        <td class="text-end fw-bold text-danger fs-6">
+                                            @item.TotalPrice.ToString("N0") đ
+                                        </td>
+
+                                        <!-- Remove Button -->
+                                        <td class="text-center">
+                                            <form method="post" asp-controller="Cart" asp-action="Remove" onsubmit="return confirm('Bạn chắc chắn muốn xóa sản phẩm này khỏi giỏ?');">
+                                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-circle" title="Xóa khỏi giỏ" style="width: 32px; height: 32px; padding: 0;">
+                                                    <i class="bi bi-trash3"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Cart actions below table -->
+                    <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+                        <a asp-controller="Product" asp-action="Index" class="btn btn-outline-secondary btn-sm fw-semibold">
+                            <i class="bi bi-arrow-left me-1"></i> Tiếp tục mua hàng
+                        </a>
+                        <form method="post" asp-controller="Cart" asp-action="Clear" onsubmit="return confirm('Bạn có muốn xóa toàn bộ giỏ hàng?');">
+                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                <i class="bi bi-trash me-1"></i> Làm trống giỏ hàng
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Order Summary -->
+            <div class="col-lg-4">
+                <div class="order-summary-card">
+                    <h5 class="fw-bold mb-3 text-dark pb-2 border-bottom">Tóm Tắt Đơn Thuốc</h5>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Tổng tiền hàng:</span>
+                        <span class="fw-semibold text-dark">@totalPrice.ToString("N0") đ</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Phí giao hàng:</span>
+                        <span>
+                            @if (shippingFee == 0)
+                            {
+                                <span class="badge bg-success">MIỄN PHÍ</span>
+                            }
+                            else
+                            {
+                                <span class="fw-semibold text-dark">@shippingFee.ToString("N0") đ</span>
+                            }
+                        </span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="text-muted">Tư vấn Dược sĩ:</span>
+                        <span class="badge bg-info text-white">MIỄN PHÍ 100%</span>
+                    </div>
+
+                    <hr />
+
+                    <div class="d-flex justify-content-between align-items-baseline mb-4">
+                        <span class="fw-bold text-dark fs-5">Tổng thanh toán:</span>
+                        <span class="fw-extrabold text-danger fs-4">@grandTotal.ToString("N0") đ</span>
+                    </div>
+
+                    <!-- Proceed to checkout button -->
+                    <a asp-controller="Cart" asp-action="Checkout" class="btn btn-teal text-white btn-lg w-100 fw-bold py-3 shadow mb-3">
+                        <i class="bi bi-check2-circle me-2"></i> Tiến Hành Đặt Hàng
+                    </a>
+
+                    <!-- Security badges -->
+                    <div class="bg-light p-3 rounded-3 text-center small text-muted">
+                        <div class="d-flex justify-content-center gap-3 mb-1 text-teal fs-5">
+                            <i class="bi bi-shield-lock-fill"></i>
+                            <i class="bi bi-patch-check-fill"></i>
+                            <i class="bi bi-heart-pulse-fill"></i>
+                        </div>
+                        <span>Được đóng gói chuẩn bảo quản Dược Phẩm & bảo mật thông tin sức khỏe khách hàng.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- Empty cart message -->
+        <div class="text-center py-5 bg-white rounded-4 border shadow-sm">
+            <div class="mb-3">
+                <i class="bi bi-bag-x text-muted" style="font-size: 5rem;"></i>
+            </div>
+            <h4 class="fw-bold text-dark mb-2">Giỏ Hàng Của Bạn Đang Trống</h4>
+            <p class="text-muted mb-4">Bạn chưa chọn mua sản phẩm y tế nào vào giỏ hàng.</p>
+            <a asp-controller="Product" asp-action="Index" class="btn btn-teal text-white btn-lg fw-bold px-4">
+                <i class="bi bi-shop me-2"></i> Khám Phá Nhà Thuốc Ngay
+            </a>
+        </div>
+    }
+</div>

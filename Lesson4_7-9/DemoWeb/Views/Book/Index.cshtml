@@ -1,17 +1,17 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@model IEnumerable<DemoWeb.Models.Book>
+@model List<Book>
 @{
     ViewData["Title"] = "Index";
 }
 <h2>Danh sách các cuốn sách</h2>
-<form action="" method="post" class="form-check-inline d-flex align-items-center gap-2 flex-wrap)" role="form">
-    <div class="form-group d-flex align-items-center gap-2 flex-wrap)" style="">
-        <select name="AuthorID" class="form-control" asp-items="@ViewBag.authors">
+<form action="" method="post" class="d-flex align-items-center gap-2" role="form">
+    <div class="d-flex align-items-center gap-2" style="">
+        <select name="AuthorID" class="form-select" asp-items="@ViewBag.authors">
             <option value="">Chọn tất cả</option>
         </select>
-        <select name="GenreID" class="form-control" asp-items="@ViewBag.genres">
+        <select name="GenreID" class="form-select" asp-items="@ViewBag.genres">
             <option value="">Chọn thể loại</option>
         </select>
     </div>

@@ -1,0 +1,278 @@
+@model MyWebsite.Models.Product
+@{
+    ViewData["Title"] = $"{Model.Name} - Chi Tiết Thuốc";
+    var relatedProducts = ViewBag.RelatedProducts as List<MyWebsite.Models.Product> ?? new List<MyWebsite.Models.Product>();
+}
+
+<div class="container mt-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-decoration-none text-muted"><i class="bi bi-house-door"></i> Trang Chủ</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Product" asp-action="Index" class="text-decoration-none text-muted">Sản Phẩm</a></li>
+            @if (Model.Category != null)
+            {
+                <li class="breadcrumb-item"><a asp-controller="Product" asp-action="Index" asp-route-categoryId="@Model.CategoryId" class="text-decoration-none text-muted">@Model.Category.Name</a></li>
+            }
+            <li class="breadcrumb-item active text-teal fw-semibold text-truncate" style="max-width: 300px;" aria-current="page">@Model.Name</li>
+        </ol>
+    </nav>
+
+    <!-- Main Product Details Card -->
+    <div class="card border-0 shadow-sm rounded-4 mb-5 overflow-hidden">
+        <div class="card-body p-4 p-lg-5">
+            <div class="row g-4 g-lg-5">
+                <!-- Left Column: Large Image & Quality Seals -->
+                <div class="col-lg-5 text-center">
+                    <div class="product-details-gallery mb-3">
+                        <img src="@Model.ImageUrl" alt="@Model.Name" class="product-details-img img-fluid" />
+                    </div>
+
+                    <!-- Medical Quality Guarantees -->
+                    <div class="d-flex justify-content-around text-center p-3 bg-light rounded-3 border">
+                        <div>
+                            <i class="bi bi-shield-fill-check text-success fs-4 d-block"></i>
+                            <span class="small fw-semibold text-secondary">Chuẩn GPP</span>
+                        </div>
+                        <div>
+                            <i class="bi bi-box-seam-fill text-primary fs-4 d-block"></i>
+                            <span class="small fw-semibold text-secondary">Nguyên Hộp</span>
+                        </div>
+                        <div>
+                            <i class="bi bi-truck text-warning fs-4 d-block"></i>
+                            <span class="small fw-semibold text-secondary">Giao 2H</span>
+                        </div>
+                        <div>
+                            <i class="bi bi-arrow-counterclockwise text-info fs-4 d-block"></i>
+                            <span class="small fw-semibold text-secondary">Đổi 30 ngày</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Product Clinical Info & Add to Cart -->
+                <div class="col-lg-7">
+                    <!-- Badges -->
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="badge bg-teal-light text-teal fw-bold px-3 py-1 rounded-pill">
+                            @(Model.Category?.Name ?? "Dược Phẩm")
+                        </span>
+                        @if (Model.PrescriptionRequired)
+                        {
+                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-1 rounded-pill fw-bold">
+                                <i class="bi bi-exclamation-octagon me-1"></i> Thuốc Kê Đơn (Rx)
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 rounded-pill fw-bold">
+                                <i class="bi bi-check-circle me-1"></i> Không Kê Đơn (OTC)
+                            </span>
+                        }
+                        @if (Model.IsTopSelling)
+                        {
+                            <span class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-bold">
+                                <i class="bi bi-fire me-1"></i> Bán Chạy Nhất
+                            </span>
+                        }
+                    </div>
+
+                    <!-- Title -->
+                    <h1 class="h2 fw-bold text-dark mb-2">@Model.Name</h1>
+
+                    <!-- Manufacturer & Origin -->
+                    <div class="text-muted small mb-3">
+                        <span class="me-3"><i class="bi bi-building me-1"></i> Nhà sản xuất: <strong class="text-dark">@Model.Manufacturer</strong></span>
+                        <span><i class="bi bi-box me-1"></i> Quy cách: <strong class="text-dark">@Model.Unit</strong></span>
+                    </div>
+
+                    <!-- Price Box -->
+                    <div class="p-3 bg-light rounded-3 mb-4 border d-flex align-items-baseline gap-3">
+                        <span class="fs-2 fw-extrabold text-danger">@Model.Price.ToString("N0") đ</span>
+                        @if (Model.OriginalPrice.HasValue && Model.OriginalPrice > Model.Price)
+                        {
+                            <span class="fs-5 text-muted text-decoration-line-through">@Model.OriginalPrice.Value.ToString("N0") đ</span>
+                            <span class="badge bg-danger text-white">Tiết kiệm @((Model.OriginalPrice.Value - Model.Price).ToString("N0")) đ</span>
+                        }
+                    </div>
+
+                    <!-- Short Description -->
+                    <p class="text-secondary mb-4 leading-relaxed">
+                        @Model.Description
+                    </p>
+
+                    <!-- Form Thêm Vào Giỏ Hàng (POST) -->
+                    <form method="post" asp-controller="Cart" asp-action="AddToCart" class="mb-4">
+                        <input type="hidden" name="productId" value="@Model.Id" />
+                        
+                        <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+                            <label class="fw-bold text-dark">Số lượng mua:</label>
+                            <div class="quantity-picker">
+                                <button type="button" onclick="decrementQty()">-</button>
+                                <input type="number" id="qtyInput" name="quantity" value="1" min="1" max="@Model.Stock" readonly />
+                                <button type="button" onclick="incrementQty()">+</button>
+                            </div>
+                            <span class="text-muted small">(@Model.Stock sản phẩm có sẵn tại quầy)</span>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-3">
+                            <button type="submit" class="btn btn-teal text-white btn-lg fw-bold px-4 flex-grow-1 shadow-sm">
+                                <i class="bi bi-cart-plus-fill me-2"></i> Thêm Vào Giỏ Hàng
+                            </button>
+                            <a href="tel:18006868" class="btn btn-outline-primary btn-lg fw-bold px-3">
+                                <i class="bi bi-telephone me-1"></i> Dược Sĩ Tư Vấn
+                            </a>
+                        </div>
+                    </form>
+
+                    <!-- Safe Shopping Note -->
+                    <div class="alert alert-info py-2 px-3 small d-flex align-items-center gap-2 mb-0">
+                        <i class="bi bi-info-circle-fill text-info fs-5"></i>
+                        <div>
+                            Dược phẩm được kiểm định chất lượng, bảo quản trong nhiệt độ chuẩn 20-25°C. Đọc kỹ hướng dẫn sử dụng trước khi dùng.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Clinical Details Tabs / Sections (Chỉ định, Cách dùng) -->
+    <div class="row g-4 mb-5">
+        <div class="col-lg-8">
+            <!-- Medical Section: Chỉ định (Indications) -->
+            <div class="medical-info-box">
+                <h3 class="medical-section-title">
+                    <i class="bi bi-journal-medical me-2"></i> Chỉ Định Điều Trị
+                </h3>
+                <div class="text-secondary leading-relaxed">
+                    @Model.Indications
+                </div>
+            </div>
+
+            <!-- Medical Section: Hướng dẫn sử dụng & Liều lượng (Usage) -->
+            <div class="medical-info-box">
+                <h3 class="medical-section-title">
+                    <i class="bi bi-clock-history me-2"></i> Hướng Dẫn Sử Dụng & Liều Dùng Chuẩn
+                </h3>
+                <div class="text-secondary leading-relaxed">
+                    @Model.Usage
+                </div>
+            </div>
+
+            <!-- Medical Section: Lưu ý an toàn y tế -->
+            <div class="medical-info-box border-warning bg-warning bg-opacity-10">
+                <h3 class="medical-section-title text-warning-emphasis border-warning">
+                    <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i> Cảnh Báo An Toàn & Chống Chỉ Định
+                </h3>
+                <ul class="text-secondary small mb-0 ps-3">
+                    <li>Không sử dụng nếu mẫn cảm với bất kỳ thành phần nào của thuốc.</li>
+                    <li>Phụ nữ có thai hoặc đang cho con bú cần tham vấn ý kiến bác sĩ chuyên khoa hoặc Dược sĩ trước khi dùng.</li>
+                    <li>Để xa tầm tay trẻ em. Bảo quản nơi khô ráo, tránh ánh sáng trực tiếp.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Right Side: Pharmacist Card & Policies -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="brand-icon" style="width: 50px; height: 50px;">
+                        <i class="bi bi-person-fill-check"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-0">Dược Sĩ Phụ Trách Chuyên Môn</h6>
+                        <span class="text-muted small">DS. Nguyễn Văn An - ĐH Dược HN</span>
+                    </div>
+                </div>
+                <p class="small text-muted mb-3">
+                    "Chúng tôi cam kết 100% thuốc có nguồn gốc rõ ràng từ các tập đoàn dược phẩm uy tín trong và ngoài nước."
+                </p>
+                <a href="tel:18006868" class="btn btn-outline-teal btn-sm fw-bold w-100">
+                    <i class="bi bi-chat-dots-fill me-1"></i> Chat với Dược sĩ ngay
+                </a>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <h6 class="fw-bold mb-3"><i class="bi bi-award text-teal me-2"></i>Cam Kết Chất Lượng</h6>
+                <ul class="list-unstyled small text-secondary d-flex flex-column gap-3 mb-0">
+                    <li class="d-flex align-items-start gap-2">
+                        <i class="bi bi-check-circle-fill text-success mt-1"></i>
+                        <span>Thuốc đạt chuẩn GMP-WHO và Bộ Y Tế chứng nhận.</span>
+                    </li>
+                    <li class="d-flex align-items-start gap-2">
+                        <i class="bi bi-check-circle-fill text-success mt-1"></i>
+                        <span>Bảo quản kho lạnh chuẩn GSP nghiêm ngặt.</span>
+                    </li>
+                    <li class="d-flex align-items-start gap-2">
+                        <i class="bi bi-check-circle-fill text-success mt-1"></i>
+                        <span>Hạn sử dụng còn dài (tối thiểu trên 12 tháng).</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Products -->
+    @if (relatedProducts.Any())
+    {
+        <div class="mb-5">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="fw-bold text-dark mb-0">Sản Phẩm Cùng Nhóm Điều Trị</h4>
+                <a asp-controller="Product" asp-action="Index" asp-route-categoryId="@Model.CategoryId" class="btn btn-sm btn-outline-teal">
+                    Xem thêm <i class="bi bi-chevron-right"></i>
+                </a>
+            </div>
+
+            <div class="row g-3">
+                @foreach (var p in relatedProducts)
+                {
+                    <div class="col-6 col-md-3">
+                        <div class="product-card">
+                            <div class="product-image-container" style="height: 160px;">
+                                <a asp-controller="Product" asp-action="Details" asp-route-id="@p.Id">
+                                    <img src="@p.ImageUrl" alt="@p.Name" class="product-image" style="max-height: 130px;" />
+                                </a>
+                            </div>
+                            <div class="product-body">
+                                <h6 class="product-name" style="height: 38px;">
+                                    <a asp-controller="Product" asp-action="Details" asp-route-id="@p.Id">@p.Name</a>
+                                </h6>
+                                <div class="product-pricing">
+                                    <span class="product-price-current">@p.Price.ToString("N0") đ</span>
+                                </div>
+                                <form method="post" asp-controller="Cart" asp-action="AddToCart">
+                                    <input type="hidden" name="productId" value="@p.Id" />
+                                    <input type="hidden" name="quantity" value="1" />
+                                    <input type="hidden" name="returnUrl" value="@Context.Request.Path@Context.Request.QueryString" />
+                                    <button type="submit" class="btn-add-cart-card btn-sm">
+                                        <i class="bi bi-cart-plus"></i> Thêm giỏ
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        function incrementQty() {
+            var input = document.getElementById('qtyInput');
+            var val = parseInt(input.value) || 1;
+            var max = parseInt(input.getAttribute('max')) || 100;
+            if (val < max) {
+                input.value = val + 1;
+            }
+        }
+        function decrementQty() {
+            var input = document.getElementById('qtyInput');
+            var val = parseInt(input.value) || 1;
+            if (val > 1) {
+                input.value = val - 1;
+            }
+        }
+    </script>
+}

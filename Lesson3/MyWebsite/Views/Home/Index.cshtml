@@ -1,0 +1,204 @@
+@model MyWebsite.Models.HomeIndexViewModel
+@{
+    ViewData["Title"] = "Trang Chủ - Nhà Thuốc Trực Tuyến Uy Tín";
+}
+
+<div class="container mt-4">
+    <!-- Hero Banner Section -->
+    <div class="hero-pharmacy">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <div class="hero-badge">
+                    <i class="bi bi-shield-check"></i> Tiêu Chuẩn GPP Bộ Y Tế
+                </div>
+                <h1 class="hero-title">Chăm Sóc Sức Khỏe Gia Đình Bạn Chuẩn Y Khoa</h1>
+                <p class="hero-subtitle">
+                    Hơn 10.000 sản phẩm thuốc chính hãng, thực phẩm bảo vệ sức khỏe và trang thiết bị y tế. Tư vấn tận tâm bởi đội ngũ Dược sĩ Đại học 24/7.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a asp-controller="Product" asp-action="Index" class="btn btn-warning btn-lg fw-bold px-4 shadow">
+                        <i class="bi bi-bag-plus-fill me-2"></i> Mua Thuốc Ngay
+                    </a>
+                    <a href="tel:18006868" class="btn btn-outline-light btn-lg fw-semibold px-4">
+                        <i class="bi bi-telephone-outbound me-2"></i> Tư Vấn Dược Sĩ (Miễn Phí)
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-5 d-none d-lg-block text-center position-relative">
+                <div class="p-4 bg-white bg-opacity-10 rounded-4 border border-white border-opacity-25 backdrop-blur">
+                    <i class="bi bi-capsule-pill text-warning" style="font-size: 5rem;"></i>
+                    <h4 class="text-white mt-3 fw-bold">Giao Thuốc Cấp Tốc 2H</h4>
+                    <p class="text-white text-opacity-75 small mb-0">Đóng gói kín đáo, bảo quản nhiệt độ chuẩn Dược phẩm, giao tận tay người bệnh.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trust Features (Lý do an tâm chọn chúng tôi) -->
+    <div class="row g-3 mb-5">
+        <div class="col-6 col-md-3">
+            <div class="trust-feature-card">
+                <div class="trust-icon-box teal">
+                    <i class="bi bi-patch-check-fill"></i>
+                </div>
+                <div>
+                    <h6 class="fw-bold mb-1">100% Chính Hãng</h6>
+                    <span class="text-muted small">Nguồn gốc xuất xứ rõ ràng</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="trust-feature-card">
+                <div class="trust-icon-box blue">
+                    <i class="bi bi-person-check-fill"></i>
+                </div>
+                <div>
+                    <h6 class="fw-bold mb-1">Dược Sĩ Tư Vấn</h6>
+                    <span class="text-muted small">Chuyên môn cao, tận tâm</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="trust-feature-card">
+                <div class="trust-icon-box green">
+                    <i class="bi bi-lightning-charge-fill"></i>
+                </div>
+                <div>
+                    <h6 class="fw-bold mb-1">Giao Nhanh 2 Giờ</h6>
+                    <span class="text-muted small">Nội thành hỏa tốc</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="trust-feature-card">
+                <div class="trust-icon-box orange">
+                    <i class="bi bi-arrow-repeat"></i>
+                </div>
+                <div>
+                    <h6 class="fw-bold mb-1">Đổi Trả 30 Ngày</h6>
+                    <span class="text-muted small">Miễn phí nếu có lỗi NSX</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section: Danh Mục Y Tế Nổi Bật -->
+    <div class="mb-5">
+        <div class="d-flex justify-content-between align-items-end mb-4">
+            <div>
+                <span class="text-teal fw-bold text-uppercase small"><i class="bi bi-grid-3x3-gap-fill me-1"></i> Phân loại y khoa</span>
+                <h2 class="fw-bold text-dark mb-0">Danh Mục Sản Phẩm Nổi Bật</h2>
+            </div>
+            <a asp-controller="Product" asp-action="Index" class="btn btn-outline-primary rounded-pill btn-sm px-3 fw-semibold">
+                Xem tất cả <i class="bi bi-chevron-right"></i>
+            </a>
+        </div>
+
+        <div class="row g-3">
+            @foreach (var category in Model.Categories)
+            {
+                <div class="col-6 col-md-4 col-lg-2">
+                    <a asp-controller="Product" asp-action="Index" asp-route-categoryId="@category.Id" class="category-card">
+                        <div class="category-icon-wrapper">
+                            <i class="bi @category.Icon"></i>
+                        </div>
+                        <div class="category-title">@category.Name</div>
+                        <div class="category-count">@category.ProductCount sản phẩm</div>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Section: Sản Phẩm Bán Chạy (Top Selling) -->
+    <div class="mb-5">
+        <div class="d-flex justify-content-between align-items-end mb-4">
+            <div>
+                <span class="text-danger fw-bold text-uppercase small"><i class="bi bi-fire me-1"></i> Được tin dùng nhất</span>
+                <h2 class="fw-bold text-dark mb-0">Top Thuốc & TPCN Bán Chạy</h2>
+            </div>
+            <a asp-controller="Product" asp-action="Index" asp-route-sortOrder="bestseller" class="btn btn-outline-danger rounded-pill btn-sm px-3 fw-semibold">
+                Xem thêm <i class="bi bi-chevron-right"></i>
+            </a>
+        </div>
+
+        <div class="row g-2 g-md-4">
+            @foreach (var product in Model.TopSellingProducts)
+            {
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="product-card">
+                        <!-- Badges -->
+                        <span class="badge-top-selling"><i class="bi bi-star-fill me-1"></i> Bán Chạy</span>
+                        @if (product.PrescriptionRequired)
+                        {
+                            <span class="badge-prescription">Kê Đơn (Rx)</span>
+                        }
+                        else
+                        {
+                            <span class="badge-otc">Không Kê Đơn (OTC)</span>
+                        }
+
+                        <!-- Image -->
+                        <div class="product-image-container">
+                            <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id">
+                                <img src="@product.ImageUrl" alt="@product.Name" class="product-image" loading="lazy" />
+                            </a>
+                        </div>
+
+                        <!-- Card Body -->
+                        <div class="product-body">
+                            <span class="product-category-tag">@(product.Category?.Name ?? "Dược phẩm")</span>
+                            <h3 class="product-name">
+                                <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id" title="@product.Name">
+                                    @product.Name
+                                </a>
+                            </h3>
+                            <div class="product-unit">
+                                <i class="bi bi-box-seam me-1"></i> Quy cách: @product.Unit
+                            </div>
+
+                            <div class="product-pricing">
+                                <span class="product-price-current">@product.Price.ToString("N0") đ</span>
+                                @if (product.OriginalPrice.HasValue && product.OriginalPrice > product.Price)
+                                {
+                                    <span class="product-price-original">@product.OriginalPrice.Value.ToString("N0") đ</span>
+                                }
+                            </div>
+
+                            <!-- Action Button -->
+                            <form method="post" asp-controller="Cart" asp-action="AddToCart">
+                                <input type="hidden" name="productId" value="@product.Id" />
+                                <input type="hidden" name="quantity" value="1" />
+                                <input type="hidden" name="returnUrl" value="@Context.Request.Path@Context.Request.QueryString" />
+                                <button type="submit" class="btn-add-cart-card">
+                                    <i class="bi bi-cart-plus-fill"></i> Thêm vào giỏ
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Health Advice Callout Banner -->
+    <div class="p-4 p-md-5 rounded-4 bg-white border border-primary border-opacity-25 shadow-sm">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="d-flex align-items-center gap-2 text-primary fw-bold mb-2">
+                    <i class="bi bi-heart-pulse-fill fs-4"></i>
+                    <span>TƯ VẤN SỬ DỤNG THUỐC TỪ DƯỢC SĨ</span>
+                </div>
+                <h3 class="fw-bold text-dark mb-2">Bạn đang băn khoăn về liều dùng hoặc triệu chứng?</h3>
+                <p class="text-muted mb-0">
+                    Đừng tự ý dùng thuốc sai cách! Đội ngũ Dược sĩ chuyên môn tại An Tâm Pharmacy luôn sẵn sàng giải đáp tương tác thuốc, hướng dẫn liều lượng chuẩn cho mọi đối tượng.
+                </p>
+            </div>
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                <a href="tel:18006868" class="btn btn-primary btn-lg rounded-pill fw-bold shadow">
+                    <i class="bi bi-headset me-2"></i> Gọi 1800 6868 Ngay
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

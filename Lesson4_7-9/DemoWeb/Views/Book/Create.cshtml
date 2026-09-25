@@ -1,5 +1,50 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
+@model Book
 @{
+    ViewData["Title"] = "Thêm sách mới";
 }
+<div class="col col-md-8 mx-auto">
+    <h2>Thêm mới sách</h2>
+    <form action="" method="post" enctype="multipart/form-data" class="">
+        <div class="mb-3">
+            <label asp-for="Title" class="form-label">Tên sách</label>
+            <input type="text" class="form-control" asp-for="Title" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="AuthorID" class="form-label">Tác giả</label>
+            <select asp-for="AuthorID" class="form-select" id="author">
+                <option value="0">Chọn hoặc nhập tên tác giả</option>
+                @foreach(var author in ViewBag.authors)
+                {
+                    <option value="@author.Value">@author.Text</option>
+                }
+            </select>
+            <input type="text" class="form-control" placeholder="Nhập tên tác giả" id="inputAuthor" value="" name="AuthorName"/>
+            <script>
+                const author = document.getElementById("author");
+                author.addEventListener("change", function(){
+                    var inputAuthor = document.getElementById("inputAuthor");
+                    if (this.value == 0){
+                        inputAuthor.value = "";
+                        inputAuthor.classList.remove("visually-hidden");
+                        inputAuthor.focus();
+                    }
+                    else{
+                        inputAuthor.value = this.selectedOptions[0].text;
+                        console.log(inputAuthor.value);
+                        inputAuthor.classList.add("visually-hidden");
+                    }
+                })
+            </script>
+        </div>
+        <div class="mb-3">
+            <label asp-for="GenreID"></label>
+        </div>
+        <div class="form-group"></div>
+        <div class="form-group"></div>
+        <div class="form-group"></div>
+        <div class="form-group"></div>
+    </form>
+</div>

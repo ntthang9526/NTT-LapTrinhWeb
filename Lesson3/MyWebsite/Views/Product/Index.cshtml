@@ -1,0 +1,226 @@
+@model MyWebsite.Models.ProductFilterViewModel
+@{
+    ViewData["Title"] = "Danh Sách Thuốc & Sản Phẩm Y Tế";
+    var selectedCat = Model.Categories.FirstOrDefault(c => c.Id == Model.SelectedCategoryId);
+}
+
+<div class="container mt-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-decoration-none text-muted"><i class="bi bi-house-door"></i> Trang Chủ</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Product" asp-action="Index" class="text-decoration-none text-muted">Sản Phẩm</a></li>
+            @if (selectedCat != null)
+            {
+                <li class="breadcrumb-item active text-teal fw-semibold" aria-current="page">@selectedCat.Name</li>
+            }
+            else
+            {
+                <li class="breadcrumb-item active text-teal fw-semibold" aria-current="page">Tất Cả Sản Phẩm</li>
+            }
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        <!-- Mobile Category Toggle Button -->
+        <div class="col-12 d-lg-none mb-2">
+            <button class="btn btn-teal text-white w-100 fw-bold py-2 shadow-sm d-flex justify-content-between align-items-center" 
+                    type="button" 
+                    data-bs-toggle="collapse" 
+                    data-bs-target="#categorySidebarCollapse" 
+                    aria-expanded="false" 
+                    id="mobileCategoryBtn">
+                <span><i class="bi bi-grid-fill me-2"></i>Danh Mục Sản Phẩm & Bộ Lọc</span>
+                <span class="badge bg-white text-teal rounded-pill">@(selectedCat != null ? selectedCat.Name : "Tất cả")</span>
+            </button>
+        </div>
+
+        <!-- Sidebar Filters -->
+        <div class="col-lg-3">
+            <div class="collapse d-lg-block filter-sidebar" id="categorySidebarCollapse">
+                <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                    <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-funnel-fill text-teal me-2"></i>Bộ Lọc & Danh Mục</h5>
+                    <div class="d-flex align-items-center gap-2">
+                        @if (Model.SelectedCategoryId.HasValue || !string.IsNullOrEmpty(Model.SearchTerm) || !string.IsNullOrEmpty(Model.SortOrder))
+                        {
+                            <a asp-controller="Product" asp-action="Index" class="badge bg-light text-danger border border-danger text-decoration-none">
+                                <i class="bi bi-x-circle me-1"></i>Xóa lọc
+                            </a>
+                        }
+                        <button type="button" class="btn-close d-lg-none" data-bs-toggle="collapse" data-bs-target="#categorySidebarCollapse" aria-label="Close"></button>
+                    </div>
+                </div>
+
+                <!-- Form lọc & tìm kiếm -->
+                <form method="get" asp-controller="Product" asp-action="Index" id="filterForm">
+                    <!-- Giữ lại search query nếu có -->
+                    <input type="hidden" name="search" value="@Model.SearchTerm" />
+
+                    <!-- Lọc Sắp Xếp (Bộ lọc đưa lên trên, gần sát danh mục sản phẩm) -->
+                    <div class="mb-3">
+                        <label for="sortSelect" class="form-label fw-bold text-teal small text-uppercase mb-2">
+                            <i class="bi bi-sort-down me-1"></i> Bộ lọc sắp xếp
+                        </label>
+                        @if (Model.SelectedCategoryId.HasValue)
+                        {
+                            <input type="hidden" name="categoryId" value="@Model.SelectedCategoryId.Value" />
+                        }
+                        <select name="sortOrder" id="sortSelect" class="form-select form-select-sm fw-semibold" onchange="this.form.submit()">
+                            <option value="" selected="@(string.IsNullOrEmpty(Model.SortOrder))">Mặc định (Khuyên dùng)</option>
+                            <option value="price_asc" selected="@(Model.SortOrder == "price_asc")">Giá: Thấp đến Cao</option>
+                            <option value="price_desc" selected="@(Model.SortOrder == "price_desc")">Giá: Cao đến Thấp</option>
+                            <option value="bestseller" selected="@(Model.SortOrder == "bestseller")">Bán chạy nhất</option>
+                            <option value="name_asc" selected="@(Model.SortOrder == "name_asc")">Tên A - Z</option>
+                        </select>
+                    </div>
+
+                    <!-- Danh Mục Sản Phẩm (Nằm sát ngay bên dưới bộ lọc) -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-secondary small text-uppercase mb-2">
+                            <i class="bi bi-grid-3x3-gap-fill me-1"></i> Danh mục sản phẩm
+                        </label>
+                        <div class="d-flex flex-column">
+                            <a asp-controller="Product" asp-action="Index" 
+                               asp-route-search="@Model.SearchTerm" 
+                               asp-route-sortOrder="@Model.SortOrder" 
+                               class="filter-category-item @(!Model.SelectedCategoryId.HasValue ? "active" : "")">
+                                <span><i class="bi bi-collection-fill me-2"></i> Tất cả danh mục</span>
+                                <span class="badge bg-light text-muted border">@Model.Categories.Sum(c => c.ProductCount)</span>
+                            </a>
+                            @foreach (var cat in Model.Categories)
+                            {
+                                <a asp-controller="Product" asp-action="Index" 
+                                   asp-route-categoryId="@cat.Id" 
+                                   asp-route-search="@Model.SearchTerm" 
+                                   asp-route-sortOrder="@Model.SortOrder" 
+                                   class="filter-category-item @(Model.SelectedCategoryId == cat.Id ? "active" : "")">
+                                    <span><i class="bi @cat.Icon me-2"></i> @cat.Name</span>
+                                    <span class="badge bg-light text-muted border">@cat.ProductCount</span>
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Hotline hỗ trợ y khoa nhanh -->
+                <div class="p-3 bg-light rounded-3 border mt-4 text-center">
+                    <i class="bi bi-telephone-inbound-fill text-teal fs-4 mb-2 d-block"></i>
+                    <h6 class="fw-bold mb-1">Cần tìm thuốc hiếm?</h6>
+                    <p class="small text-muted mb-2">Dược sĩ kiểm tra tồn kho tại 50+ chi nhánh</p>
+                    <a href="tel:18006868" class="btn btn-sm btn-outline-success fw-bold w-100">
+                        1800 6868 (Miễn phí)
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Grid Area -->
+        <div class="col-lg-9">
+            <!-- Header bar for results -->
+            <div class="d-flex flex-wrap justify-content-between align-items-center bg-white p-3 rounded-3 border mb-4 shadow-sm">
+                <div>
+                    <h4 class="fw-bold mb-1 text-dark">
+                        @(selectedCat != null ? selectedCat.Name : "Tất Cả Sản Phẩm Y Tế")
+                    </h4>
+                    <span class="text-muted small">
+                        Hiển thị <strong>@Model.TotalCount</strong> sản phẩm phù hợp
+                        @if (!string.IsNullOrEmpty(Model.SearchTerm))
+                        {
+                            <span>với từ khóa: <em>"@Model.SearchTerm"</em></span>
+                        }
+                    </span>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.SearchTerm))
+                {
+                    <a asp-controller="Product" asp-action="Index" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-arrow-counterclockwise me-1"></i> Xóa tìm kiếm
+                    </a>
+                }
+            </div>
+
+            <!-- Product Grid -->
+            @if (Model.Products.Any())
+            {
+                <div class="row g-2 g-md-4">
+                    @foreach (var product in Model.Products)
+                    {
+                        <div class="col-6 col-md-4">
+                            <div class="product-card">
+                                <!-- Prescription or OTC badge -->
+                                @if (product.IsTopSelling)
+                                {
+                                    <span class="badge-top-selling">Bán Chạy</span>
+                                }
+                                @if (product.PrescriptionRequired)
+                                {
+                                    <span class="badge-prescription">Kê đơn (Rx)</span>
+                                }
+                                else
+                                {
+                                    <span class="badge-otc">Không kê đơn</span>
+                                }
+
+                                <!-- Product Image -->
+                                <div class="product-image-container">
+                                    <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id">
+                                        <img src="@product.ImageUrl" alt="@product.Name" class="product-image" loading="lazy" />
+                                    </a>
+                                </div>
+
+                                <!-- Body -->
+                                <div class="product-body">
+                                    <span class="product-category-tag">@(product.Category?.Name ?? "Dược phẩm")</span>
+                                    <h3 class="product-name">
+                                        <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id" title="@product.Name">
+                                            @product.Name
+                                        </a>
+                                    </h3>
+                                    
+                                    <div class="product-unit">
+                                        <i class="bi bi-box-seam me-1"></i> @product.Unit
+                                    </div>
+
+                                    <div class="product-pricing">
+                                        <span class="product-price-current">@product.Price.ToString("N0") đ</span>
+                                        @if (product.OriginalPrice.HasValue && product.OriginalPrice > product.Price)
+                                        {
+                                            <span class="product-price-original">@product.OriginalPrice.Value.ToString("N0") đ</span>
+                                        }
+                                    </div>
+
+                                    <!-- Action Button -->
+                                    <div class="d-flex gap-1 gap-md-2 align-items-stretch">
+                                        <form method="post" asp-controller="Cart" asp-action="AddToCart" class="flex-grow-1 m-0">
+                                            <input type="hidden" name="productId" value="@product.Id" />
+                                            <input type="hidden" name="quantity" value="1" />
+                                            <input type="hidden" name="returnUrl" value="@Context.Request.Path@Context.Request.QueryString" />
+                                            <button type="submit" class="btn-add-cart-card">
+                                                <i class="bi bi-cart-plus-fill"></i> Thêm giỏ
+                                            </button>
+                                        </form>
+                                        <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id" class="btn-product-info" title="Xem chi tiết thuốc">
+                                            <i class="bi bi-info-circle"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <!-- Empty State -->
+                <div class="text-center py-5 bg-white rounded-4 border">
+                    <i class="bi bi-search text-muted" style="font-size: 4rem;"></i>
+                    <h5 class="fw-bold mt-3 text-dark">Không tìm thấy sản phẩm y tế phù hợp</h5>
+                    <p class="text-muted small">Hãy thử tìm kiếm với từ khóa khác hoặc điều chỉnh lại bộ lọc danh mục.</p>
+                    <a asp-controller="Product" asp-action="Index" class="btn btn-teal text-white fw-bold px-4 mt-2">
+                        <i class="bi bi-arrow-left me-1"></i> Xem Tất Cả Sản Phẩm
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

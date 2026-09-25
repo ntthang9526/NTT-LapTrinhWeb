@@ -1,6 +1,6 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using MyWebsite.Models;
-using System.Diagnostics;
 
 namespace MyWebsite.Controllers
 {
@@ -15,19 +15,17 @@ namespace MyWebsite.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var model = new HomeIndexViewModel
+            {
+                Categories = MockRepository.GetCategories(),
+                TopSellingProducts = MockRepository.GetTopSellingProducts(8),
+                FeaturedProducts = MockRepository.GetProducts().Take(4).ToList()
+            };
+
+            return View(model);
         }
 
         public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        public IActionResult Introduction()
-        {
-            return View("Product");
-        }
-        public IActionResult Product()
         {
             return View();
         }
