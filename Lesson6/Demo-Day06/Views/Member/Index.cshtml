@@ -1,0 +1,27 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    var members = ViewBag.members as List<Demo_Day06.Models.DataModels.Member>;
+}
+<h2>Danh sách thành viên</h2>
+<a href="~/Member/Create" class="btn btn-primary">Thêm mới</a>
+<table class="table table-bordered">
+    <tr>
+        <th>Mã thành viên</th>
+        <th>Username</th>
+        <th>Fullname</th>
+        <th>Password</th>
+        <th>Email</th>
+    </tr>
+    @foreach (var mem in members)
+    {
+        <tr>
+            <td>@mem.MemberID</td>
+            <td>@mem.Username</td>
+            <td>@mem.Fullname</td>
+            <td>@mem.Password</td>
+            <td>@mem.Email</td>
+        </tr>
+    }
+</table>
