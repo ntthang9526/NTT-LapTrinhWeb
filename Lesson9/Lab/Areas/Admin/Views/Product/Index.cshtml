@@ -1,0 +1,22 @@
+@model IEnumerable<Product>
+@{ ViewData["Title"] = "Sản phẩm"; }
+<div class="card">
+    <div class="card-header"><a asp-action="Create" class="btn btn-primary"><i class="fas fa-plus"></i> Thêm mới</a></div>
+    <div class="card-body table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead><tr><th>ID</th><th>Tên</th><th>Danh mục</th><th>Giá</th><th>Giá khuyến mãi</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+            <tbody>
+            @foreach (var item in Model)
+            {
+                <tr><td>@item.Id</td><td>@item.Name</td><td>@item.Category?.Name</td><td>@item.Price</td><td>@item.SalePrice</td><td><span class="badge @(item.Status == 1 ? "badge-success" : "badge-secondary")">@(item.Status == 1 ? "Hiển thị" : "Ẩn")</span></td>
+                <td class="text-nowrap">
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm" aria-label="Chi tiết"><i class="fas fa-eye"></i></a>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm" aria-label="Sửa"><i class="fas fa-edit"></i></a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" aria-label="Xóa"><i class="fas fa-trash"></i></a>
+                </td></tr>
+            }
+            @if (!Model.Any()) { <tr><td colspan="7" class="text-center text-muted">Chưa có dữ liệu.</td></tr> }
+            </tbody>
+        </table>
+    </div>
+</div>

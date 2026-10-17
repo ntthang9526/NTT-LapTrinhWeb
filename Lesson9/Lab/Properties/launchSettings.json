@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "NetCoreLA7": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "Admin",
+      "applicationUrl": "http://localhost:5070",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

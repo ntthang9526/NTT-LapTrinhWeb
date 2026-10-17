@@ -1,0 +1,12 @@
+@model Category
+@{ ViewData["Title"] = "Chỉnh sửa danh mục"; }
+<div class="card"><div class="card-body">
+<form asp-action="Edit" asp-route-id="@(Model.Id == 0 ? (int?)null : Model.Id)" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Id" />
+    <partial name="_Form" model="Model" />
+    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Lưu</button>
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+</form>
+</div></div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

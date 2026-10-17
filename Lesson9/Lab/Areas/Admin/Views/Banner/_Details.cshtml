@@ -1,0 +1,9 @@
+@model Banner
+<dl class="row">
+<dt class="col-sm-3">ID</dt><dd class="col-sm-9">@Model.Id</dd>
+<dt class="col-sm-3">Tên</dt><dd class="col-sm-9">@Model.Name</dd>
+<dt class="col-sm-3">Thứ tự</dt><dd class="col-sm-9">@Model.Prioty</dd>
+<dt class="col-sm-3">Trạng thái</dt><dd class="col-sm-9">@(Model.Status == 1 ? "Hiển thị" : "Ẩn")</dd>
+<dt class="col-sm-3">Ảnh</dt><dd class="col-sm-9">@Model.Image</dd>
+<dt class="col-sm-3">Mô tả</dt><dd class="col-sm-9">@Model.Description</dd>
+</dl>

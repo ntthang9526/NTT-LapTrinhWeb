@@ -1,0 +1,16 @@
+@{ ViewData["Title"] = "Tổng quan"; }
+<div class="row">
+@foreach (var item in new[] {
+    (Controller: "Category", Name: "Danh mục", Count: (int)ViewBag.CategoryCount, Color: "info", Icon: "list"),
+    (Controller: "Product", Name: "Sản phẩm", Count: (int)ViewBag.ProductCount, Color: "success", Icon: "box"),
+    (Controller: "Banner", Name: "Banner", Count: (int)ViewBag.BannerCount, Color: "warning", Icon: "images"),
+    (Controller: "Blog", Name: "Bài viết", Count: (int)ViewBag.BlogCount, Color: "danger", Icon: "newspaper")
+})
+{
+    <div class="col-lg-3 col-6"><div class="small-box bg-@item.Color">
+        <div class="inner"><h3>@item.Count</h3><p>@item.Name</p></div>
+        <div class="icon"><i class="fas fa-@item.Icon"></i></div>
+        <a asp-area="Admin" asp-controller="@item.Controller" asp-action="Index" class="small-box-footer">Xem danh sách <i class="fas fa-arrow-circle-right"></i></a>
+    </div></div>
+}
+</div>
