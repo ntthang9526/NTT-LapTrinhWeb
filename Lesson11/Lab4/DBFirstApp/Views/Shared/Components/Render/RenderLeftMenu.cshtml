@@ -1,0 +1,10 @@
+@model IEnumerable<MenuItem>
+<aside class="admin-sidebar">
+    <div class="menu-heading">Core</div>
+    <a asp-controller="Home" asp-action="Index">Dashboard</a>
+    <div class="menu-heading">Addons</div>
+    @foreach (var item in Model)
+    {
+        <a href="@item.Link">@item.Name</a>
+    }
+</aside>
