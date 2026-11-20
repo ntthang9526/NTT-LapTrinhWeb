@@ -1,0 +1,41 @@
+﻿@model ThemSachInput
+
+<main class="main">
+    <div class="container">
+        <h2>Thêm sách</h2>
+
+        <form asp-action="Create" method="post">
+            <div>
+                <label asp-for="MaTl">Thể loại</label>
+                <select asp-for="MaTl" asp-items="ViewBag.MaTlItems">
+                    <option value="">-- Chọn thể loại --</option>
+                </select>
+                <span asp-validation-for="MaTl"></span>
+            </div>
+
+            <div>
+                <label asp-for="TenSach">Tên sách</label>
+                <input asp-for="TenSach" />
+                <span asp-validation-for="TenSach"></span>
+            </div>
+
+            <div>
+                <label asp-for="Gia">Giá (nghìn đồng)</label>
+                <input asp-for="Gia" />
+                <span asp-validation-for="Gia"></span>
+            </div>
+
+            <div>
+                <label asp-for="Anh">Tên ảnh</label>
+                <input asp-for="Anh" placeholder="Img_1.jpg" />
+                <span asp-validation-for="Anh"></span>
+            </div>
+
+            <button type="submit">Create</button>
+        </form>
+    </div>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,13 @@
+﻿@model IEnumerable<NguyenTrungThang_241230852.Models.Sach>
+<main class="main">
+    <div class="container">
+        <div class="banner"><img src="~/images/banner.jpg" alt="Banner" /></div>
+
+        <!-- Sách mới -->
+        <div id="book-results" data-url="@Url.Action("SachTheoTheLoai", "Home")">
+            <partial name="_DanhSachSach" model="Model" />
+        </div>
+
+        <!-- Sách nổi bật -->
+    </div>
+</main>

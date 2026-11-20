@@ -1,0 +1,35 @@
+﻿@using NguyenTrungThang_241230852.Models
+<header class="header">
+    <div class="topbar">
+        <div class="container">
+            <span>Hotline: <b>1900 6789</b> &nbsp;|&nbsp; Miễn phí vận chuyển đơn từ 300.000đ</span>
+            <span>Đăng nhập &nbsp;|&nbsp; Đăng ký</span>
+        </div>
+    </div>
+    <div class="header-main">
+        <div class="container">
+            <a asp-controller="Home" asp-action="Index"><img src="~/images/logo.png" alt="BookHub" /></a>
+            <div class="cart-box">Giỏ hàng: 0 sản phẩm - 0đ</div>
+        </div>
+    </div>
+    <nav class="navbar">
+        <div class="container">
+            
+            <ul class="menu">
+                <li class="active"><a asp-controller="Home" asp-action="Index">Nguyễn Trung Thắng</a></li>
+                @if (ViewData["TheLoais"] is IEnumerable<TheLoai> theLoais)
+                {
+                    foreach (var loai in theLoais)
+                    {
+                        <li> <a href="#" data-ma-tl="@loai.MaTl">@loai.TenTl</a></li>
+                    }
+                }
+            </ul>
+            <form class="search-box">
+                <input type="text" placeholder="Tìm sách..." />
+                <button type="button">Tìm</button>
+            </form>
+            <button class="btn btn-primary"><a asp-controller="Home" asp-action="Create">Thêm sách</a></button>
+        </div>
+    </nav>
+</header>

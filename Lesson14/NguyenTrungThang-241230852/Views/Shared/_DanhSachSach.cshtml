@@ -1,0 +1,15 @@
+﻿@model IEnumerable<NguyenTrungThang_241230852.Models.Sach>
+
+<div class="section-head">
+    <h3>@(ViewData["TieuDeSach"] ?? "Nguyễn Trung Thắng")</h3>
+</div>
+<div class="grid">
+    @foreach (var sach in Model)
+    {
+    <div class="book-card">
+        <img src="@Url.Content("~/images/" + sach.Anh)"/>
+        <h2>@sach.TenSach</h2>
+        <div class="book-foot"><span class="price">@sach.Gia</span><button class="btn-buy">Thêm vào giỏ</button></div>
+    </div>
+    }
+</div>
