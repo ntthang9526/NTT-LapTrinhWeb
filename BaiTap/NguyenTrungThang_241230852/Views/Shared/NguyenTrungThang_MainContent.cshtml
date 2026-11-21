@@ -1,0 +1,9 @@
+@model IEnumerable<HangHoa>
+
+<main class="main">
+    <div class="content">
+        <div id="hang-hoa-results" data-url="@Url.Action("HangTheoLoai", "Home")" aria-live="polite">
+            <partial name="_DanhSachHangHoa" model="Model" />
+        </div>
+    </div>
+</main>

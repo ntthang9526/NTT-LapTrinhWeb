@@ -1,0 +1,40 @@
+@model ThemHangHoaInput
+
+@{
+    ViewData["Title"] = "Thêm hàng hóa";
+}
+
+<main class="main">
+    <div class="content">
+        <h2>Thêm hàng hóa</h2>
+        <form class="them-hang-form" asp-action="Create" method="post">
+            <div>
+                <label asp-for="MaLoai">Loại hàng</label>
+                <select asp-for="MaLoai" asp-items="ViewBag.MaLoaiItems">
+                    <option value="">-- Chọn loại hàng --</option>
+                </select>
+                <span asp-validation-for="MaLoai"></span>
+            </div>
+            <div>
+                <label asp-for="TenHang">Tên hàng</label>
+                <input asp-for="TenHang" />
+                <span asp-validation-for="TenHang"></span>
+            </div>
+            <div>
+                <label asp-for="Gia">Giá</label>
+                <input asp-for="Gia" />
+                <span asp-validation-for="Gia"></span>
+            </div>
+            <div>
+                <label asp-for="Anh">Tên ảnh</label>
+                <input asp-for="Anh" placeholder="Img_1.jpg" />
+                <span asp-validation-for="Anh"></span>
+            </div>
+            <button type="submit">Create</button>
+        </form>
+    </div>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <title>@ViewData["Title"] - Quản lý hàng hóa</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="~/css/style.css" rel="stylesheet" asp-append-version="true" />
+</head>
+<body>
+    <div class="wrap">
+        <partial name="NguyenTrungThang_Header" />
+        @RenderBody()
+    </div>
+    <partial name="NguyenTrungThang_Footer" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/main.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
