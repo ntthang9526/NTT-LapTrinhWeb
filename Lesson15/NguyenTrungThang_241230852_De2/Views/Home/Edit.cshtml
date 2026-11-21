@@ -1,0 +1,41 @@
+@model TaiSanInput
+
+@{
+    ViewData["Title"] = "Sửa tài sản";
+}
+
+<main class="main">
+    <div class="container">
+        <div class="section-head"><h3>Sửa tài sản</h3></div>
+        <form class="asset-form" asp-action="Edit" asp-route-id="@(ViewData["MaTs"])" method="post">
+            <div>
+                <label asp-for="MaLoai">Loại tài sản</label>
+                <select asp-for="MaLoai" asp-items="ViewBag.MaLoaiItems">
+                    <option value="">-- Chọn loại tài sản --</option>
+                </select>
+                <span asp-validation-for="MaLoai"></span>
+            </div>
+            <div>
+                <label asp-for="TenTs">Tên tài sản</label>
+                <input asp-for="TenTs" />
+                <span asp-validation-for="TenTs"></span>
+            </div>
+            <div>
+                <label asp-for="NguyenGia">Nguyên giá (triệu đồng)</label>
+                <input asp-for="NguyenGia" />
+                <span asp-validation-for="NguyenGia"></span>
+            </div>
+            <div>
+                <label asp-for="Anh">Tên ảnh</label>
+                <input asp-for="Anh" placeholder="Img_1.jpg" />
+                <span asp-validation-for="Anh"></span>
+            </div>
+            <button class="btn-buy" type="submit">Save</button>
+            <a asp-action="Index">Quay về trang chủ</a>
+        </form>
+    </div>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

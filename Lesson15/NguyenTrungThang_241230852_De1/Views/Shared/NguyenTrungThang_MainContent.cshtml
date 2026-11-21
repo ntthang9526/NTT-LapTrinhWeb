@@ -1,0 +1,10 @@
+@model IEnumerable<TaiSan>
+
+<main class="main">
+    <div class="container">
+        <div class="banner"><img src="~/images/banner.jpg" alt="Banner AssetHub" /></div>
+        <div id="tai-san-results" data-url="@Url.Action("TaiSanTheoLoai", "Home")" aria-live="polite">
+            <partial name="_DanhSachTaiSan" model="Model" />
+        </div>
+    </div>
+</main>

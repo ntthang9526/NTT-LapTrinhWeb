@@ -1,0 +1,39 @@
+@{
+    var maLoaiDangChon = ViewData["MaLoaiDangChon"] as int?;
+    var action = ViewContext.RouteData.Values["action"]?.ToString();
+}
+
+<header class="header">
+    <div class="topbar">
+        <div class="container">
+            <span>Phòng Hành chính - Quản trị: <b>(024) 3999 8888</b> &nbsp;|&nbsp; Hỗ trợ: taisan@assethub.vn</span>
+        </div>
+    </div>
+    <div class="header-main">
+        <div class="container">
+            <a asp-controller="Home" asp-action="Index">
+                <img src="~/images/logo.png" alt="AssetHub" />
+            </a>
+        </div>
+    </div>
+    <nav class="navbar" aria-label="Loại tài sản">
+        <div class="container">
+            <ul class="menu">
+                <li class="@(action == "Index" && maLoaiDangChon is null ? "active" : null)">
+                    <a asp-controller="Home" asp-action="Index">Nguyễn Trung Thắng</a>
+                </li>
+                @if (ViewData["LoaiTaiSans"] is IEnumerable<LoaiTaiSan> loais)
+                {
+                    foreach (var loai in loais)
+                    {
+                        <li class="@(maLoaiDangChon == loai.MaLoai ? "active" : null)">
+                            <a asp-controller="Home" asp-action="Index" asp-route-maLoai="@loai.MaLoai"
+                               data-ma-loai="@loai.MaLoai">@loai.TenLoai</a>
+                        </li>
+                    }
+                }
+                
+            </ul>
+        </div>
+    </nav>
+</header>
